@@ -76,11 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Niko\Desktop\Arc\Arkanoid %282%29\irrKlang-64bit-1.6.0\include;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\glew-1.11.0\include;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Niko\source\repos\SpaceZ\irrKlang-1.6.0\include;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\glew-1.11.0\include;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\Niko\Desktop\Arc\Arkanoid %282%29\irrKlang-64bit-1.6.0\lib;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\freeglut\lib;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\glew-1.11.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Niko\source\repos\SpaceZ\irrKlang-1.6.0\lib\Win32-visualStudio;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\freeglut\lib;C:\Users\Niko\Desktop\Arc\OpenGL_Setup_Files\glew-1.11.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

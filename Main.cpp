@@ -1,4 +1,5 @@
-﻿#include "Main.h"
+﻿#pragma once
+#include <stdio.h>
 #include <iostream>
 #include <GL\glew.h>
 #include <GL\freeglut.h>
@@ -7,16 +8,22 @@
 #include "Vars.h"
 #include "Spaceship.h"
 #include "Amo.h"
+
+#pragma comment(lib, "irrKlang.lib")
+#include <irrKlang.h>
+using namespace irrklang;
+
 using namespace std;
 
+ISoundEngine* BackgroundMusic = createIrrKlangDevice();
 Spaceship spaceship;
 Amo amo;
 float positionSpaceShipX;
 
 void Draw()
 {
-	//cout << "Draw";
 
+	//cout << "Draw";
 	GLfloat centerX = (-0.15 + 0 + 0.15) / 3;
 	GLfloat centerY = (0 + 0 + 0.45) / 3;
 	
@@ -115,6 +122,7 @@ void MouseFunc(int button, int state, int x, int y)
 			amo.angle = spaceship.angle;
 			amo.horizontalPosition = spaceship.horizontalPosition;
 			amo.verticalPosition = spaceship.verticalPosition;
+			BackgroundMusic->play2D("audio/fire.mp3", false);
 		}
 		else {
 			amo.live = false;
@@ -151,6 +159,7 @@ void Init()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 0.0f, 0.0f, 1.0f);
+	BackgroundMusic->play2D("audio/breakout.mp3", true);
 }
 
 int main(int argc, char** argv)
