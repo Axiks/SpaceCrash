@@ -8,25 +8,58 @@
 #include "Vars.h"
 #include "Spaceship.h"
 #include "Amo.h"
+#include "Enemies.h"
+//#pragma comment(lib, "irrKlang.lib")
+//#include <irrKlang.h>
+#include <cstdlib>
+#include <ctime>  
+#include <random>
+#include <windows.h>
 
-#pragma comment(lib, "irrKlang.lib")
-#include <irrKlang.h>
-using namespace irrklang;
-
+//using namespace irrklang;
 using namespace std;
 
-ISoundEngine* BackgroundMusic = createIrrKlangDevice();
+//ISoundEngine* BackgroundMusic = createIrrKlangDevice();
+//ISoundEngine* fireEfect = createIrrKlangDevice();
 Spaceship spaceship;
 Amo amo;
-float positionSpaceShipX;
+
+mt19937 gen;
+uniform_real_distribution<> tandH(-0.9, 0.9);
+uniform_real_distribution<> tandV(0, 0.9);
+
+
+Enemies enem(0.0, 0.0);
+
+void amoColaider() {
+	//cout << "AMO Position x:" << amo.horizontalPosition << " y:" << amo.verticalPosition << endl;
+	if (amo.verticalPosition >= 1.0) {
+		amo.live = false;
+		cout << "Amo live false";
+	}
+}
+
+void eminemNew() {
+	enem.live = true;
+	gen.seed(time(0));
+	enem.horizontalPosition = (float)tandH(gen);
+	enem.verticalPosition = (float)tandV(gen);
+}
+
+void eminemCrash() {
+	cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
+	cout << "Amo hor position: " << amo.horizontalPosition << endl;
+	if (
+			amo.verticalPosition >= enem.verticalPosition - enem.h && ( (amo.horizontalPosition > enem.horizontalPosition) && (amo.horizontalPosition <= enem.horizontalPosition + (enem.h + 0.01)))
+		) {
+		amo.live = false;
+		enem.live = false;
+		eminemNew();
+	}
+}
 
 void Draw()
 {
-
-	//cout << "Draw";
-	GLfloat centerX = (-0.15 + 0 + 0.15) / 3;
-	GLfloat centerY = (0 + 0 + 0.45) / 3;
-	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glMatrixMode(GL_MODELVIEW);
@@ -37,28 +70,27 @@ void Draw()
 	glRotated(spaceship.angle, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
 	glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
-	glVertex2f(-0.1, -0.15);
-	glVertex2f(0.1, -0.15);
-	glVertex2f(0, 0.15);
+	glVertex2f(-0.05, -0.06);
+	glVertex2f(0.05, -0.06);
+	glVertex2f(0, 0.06);
 	glEnd();
-
 	glPopMatrix();
 
 
 	glPushMatrix();
-
 	if (amo.live) {
-	glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
-	glRotated(amo.angle, 0, 0, 1);
-	
-		glTranslatef(0.0, amo.verticalVector += amo._speed, 0.0);
+		amoColaider();
+		//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
+		//glRotated(amo.angle, 0, 0, 1);
+		glRotated(amo.angle, 0, 0, 1);
+		glTranslated(amo.horizontalPosition, amo.verticalPosition += amo._speed, 0);
+		//glTranslatef(amo.horizontalPosition += amo._speed, amo.verticalPosition += sqrt(pow(abs(amo.horizontalPosition - amo.horizontalFirePosition) / cos(amo.angle),2) - pow(amo.horizontalFirePosition - amo.horizontalFirePosition, 2)) - amo.verticalFirePosition, 0.0);
 		glBegin(GL_LINES);
-		glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.7);
-		glVertex2f(0.0, 0);
-		glVertex2f(0, 0.1);
+		glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition + amo._speed, 0.9);
+		glVertex2f(0.0, 0.1);
+		glVertex2f(0, 0.0);
 		glEnd();
 	}
-
 	glPopMatrix();
 
 
@@ -66,34 +98,83 @@ void Draw()
 	//Enemies
 	glPushMatrix();
 
-	glTranslatef(0.2, 0.85, 0.0);
-	glBegin(GL_QUADS);
-	glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
-	glVertex2f(0.0, 0.1);
-	glVertex2f(0.1, 0.1);
-	glVertex2f(0.1, 0.0);
-	glVertex2f(0.0, 0.0);
-	glEnd();
+	if (enem.live) {
+		eminemCrash();
+		glTranslatef(enem.horizontalPosition, enem.verticalPosition, 0.0);
+		glBegin(GL_QUADS);
+		glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
+		glVertex2f(0.0, enem.h);
+		glVertex2f(enem.w, enem.h);
+		glVertex2f(enem.w, 0.0);
+		glVertex2f(0.0, 0.0);
+		glEnd();
+	}
+
 
 	glPopMatrix();
 
 
-
 	glutSwapBuffers();
-	//glRotated(-spaceship.angle, 0, 0, 1);
-	//glTranslatef(-spaceship.verticalPosition, spaceship.horizontalPosition, 0.0);
-
-	//glPopMatrix();
-
-	//glFlush();
-
 }
 
 
+void processNormalKeys(unsigned char key, int x, int y) {
+
+	if (key == _GLFW_KEY_SPACE) {
+		cout << "Space press";
+;		if (amo.live == false) {
+			amo.live = true;
+			amo.angle = spaceship.angle;
+
+			amo.horizontalFirePosition = spaceship.verticalPosition;
+			amo.verticalFirePosition = -spaceship.horizontalPosition;
+
+			amo.horizontalPosition = amo.horizontalFirePosition;
+			amo.verticalPosition = amo.verticalFirePosition;
+
+			cout << "Angle: " << amo.angle << endl;
+			cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
+			cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
+
+			//fireEfect->play2D("audio/fire.mp3", false);
+		}
+		else {
+			amo.live = false;
+			amo.angle = 0;
+			amo.horizontalFirePosition = 0;
+			amo.verticalFirePosition = 0;
+			amo.horizontalPosition = 0;
+			amo.verticalPosition = 0;
+			//fireEfect->removeAllSoundSources();
+		}
+	}
+
+}
+
+void processSpecialKeys(int key, int x, int y) {
+	switch (key) {
+	case GLUT_KEY_LEFT:
+		if(spaceship.verticalPosition - spaceship.speed < 1.0 && spaceship.verticalPosition - spaceship.speed > -1.0)
+			spaceship.verticalPosition -= spaceship.speed;
+		break;
+	case GLUT_KEY_RIGHT:
+		if (spaceship.verticalPosition + spaceship.speed < 1.0 && spaceship.verticalPosition + spaceship.speed > -1.0)
+			spaceship.verticalPosition += spaceship.speed;
+		break;
+	case GLUT_KEY_UP:
+		if (spaceship.horizontalPosition - spaceship.speed < 1.0 && spaceship.horizontalPosition - spaceship.speed > -1.0)
+			spaceship.horizontalPosition -= spaceship.speed;
+		break;
+	case GLUT_KEY_DOWN:
+		if (spaceship.horizontalPosition + spaceship.speed < 1.0 && spaceship.horizontalPosition + spaceship.speed > -1.0)
+			spaceship.horizontalPosition += spaceship.speed;
+		break;
+	}
+}
 
 void Mouse(int ax, int ay)
 {
-	float XPosition = (ax / (float) (_DisplayWidth - (_DisplayWidth/2))) -1.0;
+	float XPosition = (ax / (float)(_DisplayWidth - (_DisplayWidth / 2))) - 1.0;
 	float YPosition = (ay / (float)(_DisplayHeight - (_DisplayHeight / 2))) - 1.0;
 	cout << fixed;
 	cout << " x:" << XPosition << " y:" << YPosition << endl;
@@ -117,24 +198,32 @@ void MouseFunc(int button, int state, int x, int y)
 	}
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		if (amo.live == false) {
+		cout << "Space press";
+		;		if (amo.live == false) {
 			amo.live = true;
 			amo.angle = spaceship.angle;
-			amo.horizontalPosition = spaceship.horizontalPosition;
-			amo.verticalPosition = spaceship.verticalPosition;
-			BackgroundMusic->play2D("audio/fire.mp3", false);
+
+			amo.horizontalFirePosition = spaceship.verticalPosition;
+			amo.verticalFirePosition = -spaceship.horizontalPosition;
+
+			amo.horizontalPosition = amo.horizontalFirePosition;
+			amo.verticalPosition = amo.verticalFirePosition;
+
+			cout << "Angle: " << amo.angle << endl;
+			cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
+			cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
+
+			//fireEfect->play2D("audio/fire.mp3", false);
 		}
 		else {
 			amo.live = false;
+			amo.angle = 0;
+			amo.horizontalFirePosition = 0;
+			amo.verticalFirePosition = 0;
 			amo.horizontalPosition = 0;
 			amo.verticalPosition = 0;
-			amo.verticalVector = 0;
-			amo.live = true;
-			amo.angle = spaceship.angle;
-			amo.horizontalPosition = spaceship.horizontalPosition;
-			amo.verticalPosition = spaceship.verticalPosition;
+			//fireEfect->removeAllSoundSources();
 		}
-		cout << "Amo fire" << endl;
 	}
 
 	// Wheel reports as button 3(scroll up) and button 4(scroll down)
@@ -148,6 +237,7 @@ void MouseFunc(int button, int state, int x, int y)
 	}
 }
 
+
 void Timer(int)
 {
 	Draw();
@@ -156,14 +246,21 @@ void Timer(int)
 
 void Init()
 {
+	eminemNew();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 0.0f, 0.0f, 1.0f);
-	BackgroundMusic->play2D("audio/breakout.mp3", true);
+	//BackgroundMusic->play2D("audio/breakout.mp3", true);
 }
 
 int main(int argc, char** argv)
 {
+	HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r); //stores the console's current dimensions
+
+	MoveWindow(console, r.left, r.top, _DisplayWidth, _DisplayHeight, TRUE);
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(_DisplayWidth, _DisplayHeight);
@@ -171,145 +268,12 @@ int main(int argc, char** argv)
 	glutCreateWindow("SpaceY");
 	glutDisplayFunc(Draw);
 	glutTimerFunc(_DisplayFPS, Timer, 0);
+	glutKeyboardFunc(processNormalKeys);
+	glutSpecialFunc(processSpecialKeys);
 	glutPassiveMotionFunc(Mouse);
 	glutMouseFunc(MouseFunc);
+
 	Init();
 	glutMainLoop();
 }
 
-
-///////////////////////////
-
-//#include <iostream>
-//#include "glut.h"
-//
-//using namespace std;
-//
-//int max_bullets = 5;//10;
-//
-//struct Bullet {
-//	int x, y;
-//	bool busy;
-//};
-//
-//class Fire
-//{
-//private:
-//	Bullet* bullets;
-//
-//public:
-//	Fire()
-//	{
-//		bullets = new Bullet[max_bullets];
-//		for (int i = 0; i < max_bullets; ++i)
-//			bullets[i].busy = false;
-//	}
-//	~Fire() { delete[] bullets; }
-//
-//	bool AddBullet()
-//	{
-//		int n = -1;
-//		for (int i = 0; i < max_bullets; ++i)
-//			if (!bullets[i].busy) {
-//				n = i;
-//				break;
-//			}
-//		if (n < 0) return false;
-//		bullets[n].busy = true;
-//		bullets[n].x = 0;
-//		bullets[n].y = 0;
-//		return true;
-//	}
-//
-//	void Update()
-//	{
-//		for (int i = 0; i < max_bullets; ++i)
-//			if (bullets[i].busy) {
-//				bullets[i].y += 15;
-//				if (bullets[i].y > 300)
-//					bullets[i].busy = false;
-//			}
-//	}
-//
-//	void Draw()
-//	{
-//		//      glPushMatrix();
-//		//      glTranslatef(0.0,0.0,0.0);
-//		glPointSize(10);
-//		glEnable(GL_POINT_SMOOTH);
-//		glBegin(GL_POINTS);
-//		glColor3f(0.0f, 1.0f, 0.0f);
-//		glVertex2f(0.0f, 0.0f);
-//		glColor3f(1.0f, 0.0f, 1.0f);
-//		for (int i = 0; i < max_bullets; ++i) {
-//			if (bullets[i].busy) {
-//				glVertex2f((float)bullets[i].x, (float)bullets[i].y);
-//			}
-//		}
-//		glEnd();
-//		glDisable(GL_POINT_SMOOTH);
-//		//      glPopMatrix();
-//	}
-//
-//} shot;
-//
-//void mauseClick(int button, int state, int x, int y)
-//{
-//	switch (button)
-//	{
-//	case GLUT_LEFT_BUTTON:
-//		if (state == GLUT_UP) {
-//			shot.AddBullet();
-//		}
-//		break;
-//	case GLUT_MIDDLE_BUTTON:
-//		if (state == GLUT_DOWN)
-//			glutIdleFunc(NULL);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void Timer(int value)
-//{
-//	shot.Update();
-//	glutPostRedisplay();
-//	glutTimerFunc(100, Timer, 0);
-//}
-//
-//void draw()
-//{
-//	glClear(GL_COLOR_BUFFER_BIT);
-//
-//	shot.Draw();
-//
-//	glFlush();
-//	glutSwapBuffers();
-//}
-//
-//void Initialization()
-//{
-//	glClearColor(0.1, 0.3, 0.5, 1.0);
-//	glMatrixMode(GL_MODELVIEW);
-//	glLoadIdentity();
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
-//	glOrtho(-600, 600, -400, 400, -300, 300);
-//}
-//
-//int main(int argc, char** argv)
-//{
-//	glutInit(&argc, argv);
-//	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-//	glutInitWindowSize(640, 480);
-//	glutInitWindowPosition(20, 20);
-//	glutCreateWindow("Tanks");
-//	glutDisplayFunc(draw);
-//	glutTimerFunc(100, Timer, 0);
-//	glutMouseFunc(mauseClick);
-//	Initialization();
-//	glutMainLoop();
-//	system("pause >> NULL");
-//	return 0;
-//}

@@ -12,12 +12,13 @@ public:
 	float horizontalPosition, verticalPosition;
 	float angle;
 	int amo;
+	float speed;
 	//list<Amo> amos;
 
 	bool live;
 
 	Spaceship(float horizontalVector, float verticalVector, float horizontalPosition, float verticalPosition, int amo, bool live) : horizontalVector(horizontalVector), verticalVector(verticalVector), horizontalPosition(horizontalPosition), verticalPosition(verticalPosition), amo(amo), live(true){};
-	Spaceship() : horizontalVector(0), verticalVector(0), horizontalPosition(0), verticalPosition(0), angle(0), amo(10), live(true){};
+	Spaceship() : horizontalVector(0), verticalVector(0), horizontalPosition(+0.5), verticalPosition(0), angle(0), amo(10), live(true), speed(0.05){};
 
 	void Fire() {
 		//amos.insert();

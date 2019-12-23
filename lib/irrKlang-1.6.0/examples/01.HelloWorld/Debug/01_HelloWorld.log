@@ -1,0 +1,2 @@
+﻿cl : wiersz polecenia warning D9035: Opcja "Gm" jest przestarzała i będzie usunięta w przyszłych wydaniach
+cl : wiersz polecenia error D8016: opcje wiersza poleceń "/ZI" i "/Gy-" są niezgodne
