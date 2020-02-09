@@ -1,5 +1,4 @@
-﻿#pragma once
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <iostream>
 #include <GL\glew.h>
 #include <GL\freeglut.h>
@@ -9,18 +8,18 @@
 #include "Spaceship.h"
 #include "Amo.h"
 #include "Enemies.h"
-//#pragma comment(lib, "irrKlang.lib")
-//#include <irrKlang.h>
+#pragma comment(lib, "irrKlang.lib")
+#include <irrKlang.h>
 #include <cstdlib>
 #include <ctime>  
 #include <random>
 #include <windows.h>
 
-//using namespace irrklang;
+using namespace irrklang;
 using namespace std;
 
-//ISoundEngine* BackgroundMusic = createIrrKlangDevice();
-//ISoundEngine* fireEfect = createIrrKlangDevice();
+ISoundEngine* BackgroundMusic = createIrrKlangDevice();
+ISoundEngine* fireEfect = createIrrKlangDevice();
 Spaceship spaceship;
 Amo amo;
 
@@ -30,6 +29,15 @@ uniform_real_distribution<> tandV(0, 0.9);
 
 
 Enemies enem(0.0, 0.0);
+
+
+void drawMatrix(GLfloat matrix[16]) {
+	for (int i = 0; i < 16; i++) {
+		cout << "[" << i << "] " << matrix[i] << " ";
+		if (i == 3 || i == 7 || i == 11 || i == 15) cout << endl;
+		if (i == 15) cout << endl;
+	}
+}
 
 void amoColaider() {
 	//cout << "AMO Position x:" << amo.horizontalPosition << " y:" << amo.verticalPosition << endl;
@@ -47,8 +55,8 @@ void eminemNew() {
 }
 
 void eminemCrash() {
-	cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
-	cout << "Amo hor position: " << amo.horizontalPosition << endl;
+	//cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
+	//cout << "Amo hor position: " << amo.horizontalPosition << endl;
 	if (
 			amo.verticalPosition >= enem.verticalPosition - enem.h && ( (amo.horizontalPosition > enem.horizontalPosition) && (amo.horizontalPosition <= enem.horizontalPosition + (enem.h + 0.01)))
 		) {
@@ -90,6 +98,9 @@ void Draw()
 		glVertex2f(0.0, 0.1);
 		glVertex2f(0, 0.0);
 		glEnd();
+		GLfloat matrixf[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+		drawMatrix(matrixf);
 	}
 	glPopMatrix();
 
@@ -132,9 +143,9 @@ void processNormalKeys(unsigned char key, int x, int y) {
 			amo.horizontalPosition = amo.horizontalFirePosition;
 			amo.verticalPosition = amo.verticalFirePosition;
 
-			cout << "Angle: " << amo.angle << endl;
-			cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
-			cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
+			//cout << "Angle: " << amo.angle << endl;
+			//cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
+			//cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
 
 			//fireEfect->play2D("audio/fire.mp3", false);
 		}
@@ -177,7 +188,7 @@ void Mouse(int ax, int ay)
 	float XPosition = (ax / (float)(_DisplayWidth - (_DisplayWidth / 2))) - 1.0;
 	float YPosition = (ay / (float)(_DisplayHeight - (_DisplayHeight / 2))) - 1.0;
 	cout << fixed;
-	cout << " x:" << XPosition << " y:" << YPosition << endl;
+	//cout << " x:" << XPosition << " y:" << YPosition << endl;
 
 	spaceship.verticalPosition = XPosition;
 	spaceship.horizontalPosition = YPosition;
@@ -209,11 +220,11 @@ void MouseFunc(int button, int state, int x, int y)
 			amo.horizontalPosition = amo.horizontalFirePosition;
 			amo.verticalPosition = amo.verticalFirePosition;
 
-			cout << "Angle: " << amo.angle << endl;
-			cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
-			cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
+			//cout << "Angle: " << amo.angle << endl;
+			//cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
+			//cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
 
-			//fireEfect->play2D("audio/fire.mp3", false);
+			fireEfect->play2D("audio/fire.mp3", false);
 		}
 		else {
 			amo.live = false;
@@ -222,7 +233,7 @@ void MouseFunc(int button, int state, int x, int y)
 			amo.verticalFirePosition = 0;
 			amo.horizontalPosition = 0;
 			amo.verticalPosition = 0;
-			//fireEfect->removeAllSoundSources();
+			fireEfect->removeAllSoundSources();
 		}
 	}
 
@@ -250,7 +261,7 @@ void Init()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 0.0f, 0.0f, 1.0f);
-	//BackgroundMusic->play2D("audio/breakout.mp3", true);
+	BackgroundMusic->play2D("audio/breakout.mp3", true);
 }
 
 int main(int argc, char** argv)
