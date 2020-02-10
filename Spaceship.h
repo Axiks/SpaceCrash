@@ -10,6 +10,7 @@ public:
 
 	float horizontalVector, verticalVector;
 	float horizontalPosition, verticalPosition;
+	float w, h;
 	float angle;
 	int amo;
 	float speed;
@@ -17,8 +18,8 @@ public:
 
 	bool live;
 
-	Spaceship(float horizontalVector, float verticalVector, float horizontalPosition, float verticalPosition, int amo, bool live) : horizontalVector(horizontalVector), verticalVector(verticalVector), horizontalPosition(horizontalPosition), verticalPosition(verticalPosition), amo(amo), live(true){};
-	Spaceship() : horizontalVector(0), verticalVector(0), horizontalPosition(+0.5), verticalPosition(0), angle(0), amo(10), live(true), speed(0.05){};
+	Spaceship(float horizontalVector, float verticalVector, float horizontalPosition, float verticalPosition, int amo, bool live) : horizontalVector(horizontalVector), verticalVector(verticalVector), horizontalPosition(horizontalPosition), verticalPosition(verticalPosition), amo(amo), live(true), w(0.05), h(0.06) {};
+	Spaceship() : horizontalVector(0), verticalVector(0), horizontalPosition(+0.5), verticalPosition(0), angle(0), amo(10), live(true), speed(0.05), w(0.05), h(0.06){};
 
 	void Fire() {
 		//amos.insert();

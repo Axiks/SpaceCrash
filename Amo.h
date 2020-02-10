@@ -6,6 +6,7 @@ public:
 
 	float verticalVector;
 	float horizontalPosition, verticalPosition;
+	float x, y;
 	float horizontalFirePosition, verticalFirePosition;
 	float angle;
 
