@@ -41,7 +41,6 @@ GLboolean CheckCollision(float oneX, float oneY, float oneSizeX, float oneSizeY,
 	// Collision y-axis?
 	bool collisionY = twoY <= oneY + oneSizeY &&
 					  twoY >= oneY;
-
 	if (false) {
 		//Debug
 		float a = oneSizeX;
@@ -79,19 +78,8 @@ void drawMatrix(GLfloat matrix[16]) {
 	}
 }
 
-void amoDestroy() {
-	amo.live = false;
-	amo.angle = 0;
-	amo.horizontalFirePosition = 0;
-	amo.verticalFirePosition = 0;
-	amo.horizontalPosition = 0;
-	amo.verticalPosition = 0;
-	//fireEfect->removeAllSoundSources();
-}
-
 void amoFire() {
 	//for(int i = 0; i < ccc; i++){}
-	if (amo.live == false) {
 		amo.live = true;
 		//cout << "SpaceSheap horyzontal: " << spaceship.horizontalPosition << "	"<< "SpaceSheap vertical: " << spaceship.verticalPosition << endl;
 		amo.angle = spaceship.angle;
@@ -104,28 +92,12 @@ void amoFire() {
 
 		cout << "Amo vertical position: " << amo.verticalPosition << endl;
 
+		//cout << amo.fire();
 		//cout << "Angle: " << amo.angle << endl;
 		//cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
 		//cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
 
-		fireEfect->play2D("audio/fire.mp3", false);
-		//cout << amos[0].x << endl;
-		amos[ccc].set(amo);
-		ccc++;
-		
-	}
-	else {
-		amoDestroy();
-	}
-}
-
-void amoColaider() {
-	//cout << "AMO Position x:" << amo.horizontalPosition << " y:" << amo.verticalPosition << endl;
-	if (amo.x >= 1.0 || amo.x <= -1.0 ||
-		amo.y >= 1.0 || amo.y <= -1.0) {
-		amoDestroy();
-		cout << "Amo live false";
-	}
+		//fireEfect->play2D("audio/fire.mp3", false);		
 }
 
 void eminemNew() {
@@ -150,14 +122,15 @@ void eminemCrash() {
 
 	bool crash = CheckCollision(enem.horizontalPosition, enem.verticalPosition, enem.w, enem.h, amo.x, amo.y, 0.1, 0.01);
 
-		if (
-			crash
-			) {
-			amo.live = false;
-			amo.verticalPosition = -1.0;
+		if (crash) {
+			amo.destroy();
 			enem.live = false;
 			eminemNew();
 		}
+}
+
+void Physics() {
+
 }
 
 void Draw()
@@ -178,29 +151,50 @@ void Draw()
 	glEnd();
 	glPopMatrix();
 
+	//glPushMatrix();
+	////for (int i = 0; i < ccc; i++) {
+	//int i = 0;
+	//	if (amos[i].live) {
+	//		amoColaider();
+	//		glTranslatef(amos[i].horizontalFirePosition, amo.verticalFirePosition, 0.0);
+	//		glRotated(amo.angle, 0, 0, 1);
+	//		//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
+	//		//glRotated(amo.angle, 0, 0, 1);
+	//		glTranslated(amo.horizontalPosition, amo.verticalPosition += amo._speed, 0);
+	//		//glTranslatef(amo.horizontalPosition += amo._speed, amo.verticalPosition += sqrt(pow(abs(amo.horizontalPosition - amo.horizontalFirePosition) / cos(amo.angle),2) - pow(amo.horizontalFirePosition - amo.horizontalFirePosition, 2)) - amo.verticalFirePosition, 0.0);
+	//		glBegin(GL_LINES);
+	//		glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
+	//		glVertex2f(0.0, 0.1);
+	//		glVertex2f(0, 0.0);
+	//		glEnd();
+	//		GLfloat matrixf[16];
+	//		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+	//		//drawMatrix(matrixf);
+	//		amo.x = matrixf[12];
+	//		amo.y = matrixf[13];
+	//	}
+	////}
+	//glPopMatrix();
+
 	glPushMatrix();
-	//for (int i = 0; i < ccc; i++) {
-	int i = 0;
-		if (amos[i].live) {
-			amoColaider();
-			glTranslatef(amos[i].horizontalFirePosition, amo.verticalFirePosition, 0.0);
-			glRotated(amo.angle, 0, 0, 1);
-			//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
-			//glRotated(amo.angle, 0, 0, 1);
-			glTranslated(amo.horizontalPosition, amo.verticalPosition += amo._speed, 0);
-			//glTranslatef(amo.horizontalPosition += amo._speed, amo.verticalPosition += sqrt(pow(abs(amo.horizontalPosition - amo.horizontalFirePosition) / cos(amo.angle),2) - pow(amo.horizontalFirePosition - amo.horizontalFirePosition, 2)) - amo.verticalFirePosition, 0.0);
-			glBegin(GL_LINES);
-			glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
-			glVertex2f(0.0, 0.1);
-			glVertex2f(0, 0.0);
-			glEnd();
-			GLfloat matrixf[16];
-			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-			//drawMatrix(matrixf);
-			amo.x = matrixf[12];
-			amo.y = matrixf[13];
-		}
-	//}
+	if (amo.live) {
+		glTranslatef(amo.horizontalFirePosition, amo.verticalFirePosition, 0.0);
+		glRotated(amo.angle, 0, 0, 1);
+		//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
+		//glRotated(amo.angle, 0, 0, 1);
+		glTranslated(amo.horizontalPosition, amo.verticalPosition += amo._speed, 0);
+		//glTranslatef(amo.horizontalPosition += amo._speed, amo.verticalPosition += sqrt(pow(abs(amo.horizontalPosition - amo.horizontalFirePosition) / cos(amo.angle),2) - pow(amo.horizontalFirePosition - amo.horizontalFirePosition, 2)) - amo.verticalFirePosition, 0.0);
+		glBegin(GL_LINES);
+		glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
+		glVertex2f(0.0, 0.1);
+		glVertex2f(0, 0.0);
+		glEnd();
+		GLfloat matrixf[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+		amo.x = matrixf[12];
+		amo.y = matrixf[13];
+		amo.colaider();
+	}
 	glPopMatrix();
 
 
