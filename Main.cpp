@@ -22,15 +22,12 @@ using namespace irrklang;
 ISoundEngine* BackgroundMusic = createIrrKlangDevice();
 ISoundEngine* fireEfect = createIrrKlangDevice();
 Spaceship spaceship;
-Amo amo;
 
 mt19937 gen;
 uniform_real_distribution<> tandH(-0.9, 0.9);
 uniform_real_distribution<> tandV(0, 0.9);
 
 Enemies enem(0.0, 0.0);
-Amo* amos = new Amo[100];
-int ccc = 0;
 
 
 GLboolean CheckCollision(float oneX, float oneY, float oneSizeX, float oneSizeY, float twoX, float twoY, float twoSizeX, float twoSizeY) // AABB - AABB collision
@@ -78,27 +75,29 @@ void drawMatrix(GLfloat matrix[16]) {
 	}
 }
 
-void amoFire() {
-	//for(int i = 0; i < ccc; i++){}
-		amo.live = true;
-		//cout << "SpaceSheap horyzontal: " << spaceship.horizontalPosition << "	"<< "SpaceSheap vertical: " << spaceship.verticalPosition << endl;
-		amo.angle = spaceship.angle;
-
-		amo.horizontalFirePosition = spaceship.horizontalPosition;
-		amo.verticalFirePosition = spaceship.verticalPosition;
-
-		amo.horizontalPosition = 0;
-		amo.verticalPosition =  0;
-
-		cout << "Amo vertical position: " << amo.verticalPosition << endl;
-
-		//cout << amo.fire();
-		//cout << "Angle: " << amo.angle << endl;
-		//cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
-		//cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
-
-		//fireEfect->play2D("audio/fire.mp3", false);		
-}
+//void amoFire() {
+//	//for(int i = 0; i < ccc; i++){}
+//		amo.live = true;
+//		//cout << "SpaceSheap horyzontal: " << spaceship.horizontalPosition << "	"<< "SpaceSheap vertical: " << spaceship.verticalPosition << endl;
+//		amo.angle = spaceship.angle;
+//
+//		amo.horizontalFirePosition = spaceship.horizontalPosition;
+//		amo.verticalFirePosition = spaceship.verticalPosition;
+//
+//		amo.horizontalPosition = 0;
+//		amo.verticalPosition =  0;
+//
+//		cout << "Amo vertical position: " << amo.verticalPosition << endl;
+//
+//		//cout << "availableAmo: " << spaceship.availableAmo << endl;
+//
+//		//cout << amo.fire();
+//		//cout << "Angle: " << amo.angle << endl;
+//		//cout << "AMO horizontalPosition: " << amo.horizontalPosition << endl;
+//		//cout << "AMO verticalPosition: " << amo.verticalPosition << endl;
+//
+//		//fireEfect->play2D("audio/fire.mp3", false);		
+//}
 
 void eminemNew() {
 	enem.live = true;
@@ -107,7 +106,7 @@ void eminemNew() {
 	enem.verticalPosition = (float)tandV(gen);
 }
 
-void eminemCrash() {
+void eminemCrash(Amo amo) {
 	//cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
 	//cout << "Amo hor position: " << amo.horizontalPosition << endl;
 	/*if (
@@ -176,26 +175,28 @@ void Draw()
 	////}
 	//glPopMatrix();
 
-	glPushMatrix();
-	if (amo.live) {
-		glTranslatef(amo.horizontalFirePosition, amo.verticalFirePosition, 0.0);
-		glRotated(amo.angle, 0, 0, 1);
-		//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
-		//glRotated(amo.angle, 0, 0, 1);
-		glTranslated(amo.horizontalPosition, amo.verticalPosition += amo._speed, 0);
-		//glTranslatef(amo.horizontalPosition += amo._speed, amo.verticalPosition += sqrt(pow(abs(amo.horizontalPosition - amo.horizontalFirePosition) / cos(amo.angle),2) - pow(amo.horizontalFirePosition - amo.horizontalFirePosition, 2)) - amo.verticalFirePosition, 0.0);
-		glBegin(GL_LINES);
-		glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
-		glVertex2f(0.0, 0.1);
-		glVertex2f(0, 0.0);
-		glEnd();
-		GLfloat matrixf[16];
-		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-		amo.x = matrixf[12];
-		amo.y = matrixf[13];
-		amo.colaider();
+	for (int i = 0; i < spaceship.totalAmo; i++) {
+		if (spaceship.amos[i].live) {
+			glPushMatrix();
+			glTranslatef(spaceship.amos[i].horizontalFirePosition, spaceship.amos[i].verticalFirePosition, 0.0);
+			glRotated(spaceship.amos[i].angle, 0, 0, 1);
+			//glTranslatef(amo.verticalPosition, -amo.horizontalPosition, 0.0);
+			//glRotated(amo.angle, 0, 0, 1);
+			glTranslated(spaceship.amos[i].horizontalPosition, spaceship.amos[i].verticalPosition += spaceship.amos[i]._speed, 0);
+			glBegin(GL_LINES);
+			glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
+			glVertex2f(0.0, 0.1);
+			glVertex2f(0, 0.0);
+			glEnd();
+			GLfloat matrixf[16];
+			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+			spaceship.amos[i].x = matrixf[12];
+			spaceship.amos[i].y = matrixf[13];
+			spaceship.amos[i].colaider();
+			eminemCrash(spaceship.amos[i]);
+			glPopMatrix();
+		}
 	}
-	glPopMatrix();
 
 
 
@@ -203,7 +204,6 @@ void Draw()
 	glPushMatrix();
 
 	if (enem.live) {
-		eminemCrash();
 		glTranslatef(enem.horizontalPosition, enem.verticalPosition, 0.0);
 		glBegin(GL_QUADS);
 		glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
@@ -222,7 +222,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 	if (key == _GLFW_KEY_SPACE) {
 		cout << "Space press";
-		amoFire();
+		spaceship.fire();
 	}
 
 }
@@ -275,7 +275,7 @@ void MouseFunc(int button, int state, int x, int y)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		cout << "Mouse Left press";
-		amoFire();
+		spaceship.fire();
 	}
 
 	// Wheel reports as button 3(scroll up) and button 4(scroll down)

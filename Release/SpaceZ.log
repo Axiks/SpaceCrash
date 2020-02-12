@@ -1,23 +1,22 @@
 ﻿  Amo.cpp
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(20,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(11,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
   Main.cpp
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(25,22): error C2061: błąd składniowy: identyfikator „Spaceship”
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(11,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(20,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(11,32): warning C4305: "inicjowanie": obcięcie z "double" do "float"
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(12,12): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(105,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(123,117): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(188,74): warning C4305: "argument": obcięcie z "double" do "GLfloat"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(189,22): warning C4305: "argument": obcięcie z "double" do "GLfloat"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(104,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(122,117): warning C4305: "argument": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(187,75): warning C4305: "argument": obcięcie z "double" do "GLfloat"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(188,23): warning C4305: "argument": obcięcie z "double" do "GLfloat"
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(253,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(254,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
   Spaceship.cpp
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(25,22): error C2061: błąd składniowy: identyfikator „Spaceship”
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(11,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(20,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
   Generowanie kodu...
+  SpaceZ.vcxproj -> C:\Users\Niko\source\repos\SpaceZ\Release\SpaceZ.exe
