@@ -1,4 +1,4 @@
-#include "Spaceship.h"
+#include "Amo.h"
 
 void Amo::set(Amo amoSecond) {
 	cout << "amoSecond x: " << amoSecond.x << endl;
@@ -17,11 +17,11 @@ void Amo::set(Amo amoSecond) {
 
 void Amo::destroy() {
 	live = false;
-	/*angle = 0;
+	angle = 0;
 	horizontalFirePosition = 0;
 	verticalFirePosition = 0;
 	horizontalPosition = 0;
-	verticalPosition = 0;*/
+	verticalPosition = 0;
 }
 
 void Amo::colaider() {
@@ -29,6 +29,6 @@ void Amo::colaider() {
 	if (x >= 1.0 || x <= -1.0 ||
 		y >= 1.0 || y <= -1.0) {
 		destroy();
-		cout << "Amo live false" << endl;
+		//cout << "Amo live false" << endl;
 	}
 }

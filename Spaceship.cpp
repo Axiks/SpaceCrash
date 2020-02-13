@@ -10,6 +10,6 @@ void Spaceship::fire() {
 	amos[totalAmo - availableAmo].horizontalPosition = 0;
 	amos[totalAmo - availableAmo].verticalPosition = 0;
 
-	cout << "Amo[" << totalAmo - availableAmo << "] vertical position: " << amos[totalAmo - availableAmo].horizontalFirePosition << endl;
+	//cout << "Amo[" << totalAmo - availableAmo << "] vertical position: " << amos[totalAmo - availableAmo].horizontalFirePosition << endl;
 	availableAmo--;
 }

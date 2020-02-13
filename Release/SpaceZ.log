@@ -1,22 +1,24 @@
-﻿  Amo.cpp
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+﻿  Enemies.cpp
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(11,20): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(14,32): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(15,12): warning C4305: "inicjowanie": obcięcie z "double" do "float"
   Main.cpp
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(11,32): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(12,12): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(104,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(11,20): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(14,32): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Enemies.h(15,12): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(87,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(110,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
 C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(122,117): warning C4305: "argument": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(187,75): warning C4305: "argument": obcięcie z "double" do "GLfloat"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(188,23): warning C4305: "argument": obcięcie z "double" do "GLfloat"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(253,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(254,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-  Spaceship.cpp
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Amo.h(10,27): warning C4305: "inicjowanie": obcięcie z "double" do "const float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(21,14): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Spaceship.h(22,128): warning C4305: "inicjowanie": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(138,45): warning C4305: "+=": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(143,45): warning C4305: "-=": obcięcie z "double" do "float"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(171,75): warning C4305: "argument": obcięcie z "double" do "GLfloat"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(172,23): warning C4305: "argument": obcięcie z "double" do "GLfloat"
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(218,76): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(218,40): warning C4244: "argument": konwersja z "double" do "GLfloat", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(263,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Niko\source\repos\SpaceZ\SpaceZ\Main.cpp(264,18): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
   Generowanie kodu...
   SpaceZ.vcxproj -> C:\Users\Niko\source\repos\SpaceZ\Release\SpaceZ.exe
