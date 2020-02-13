@@ -5,8 +5,7 @@
 #include <windows.h>
 #include <cmath>
 #include "Vars.h"
-#include "Spaceship.h"
-#include "Amo.h"
+#include "Player.h"
 #include "Enemies.h"
 #pragma comment(lib, "irrKlang.lib")
 #include <irrKlang.h>
@@ -21,7 +20,7 @@ using namespace irrklang;
 
 ISoundEngine* BackgroundMusic = createIrrKlangDevice();
 ISoundEngine* fireEfect = createIrrKlangDevice();
-Spaceship spaceship;
+Player player;
 
 mt19937 gen;
 uniform_real_distribution<> tandH(-0.9, 0.9);
@@ -95,23 +94,23 @@ void createStar() {
 }
 
 void eminemAngleSet() {
-	float enemX = enem.horizontalPosition;
-	float enemY = enem.verticalPosition;
-	float a = fabs(enemY - spaceship.verticalPosition);
-	float b = fabs(spaceship.horizontalPosition - enemX);
+	float enemX = enem.spaceship.horizontalPosition;
+	float enemY = enem.spaceship.verticalPosition;
+	float a = fabs(enemY - player.spaceship.verticalPosition);
+	float b = fabs(player.spaceship.horizontalPosition - enemX);
 	float c = sqrt(pow(a, 2) + pow(b, 2));
 	float angle = sin(a/c);
-	enem.angle = angle * 360;
-	cout << "Angle: " << enem.angle << endl;
+	enem.spaceship.angle = angle * 360;
+	cout << "Angle: " << enem.spaceship.angle << endl;
 }
 
 void eminemNew() {
-	enem.live = true;
+	enem.spaceship.live = true;
 	gen.seed(time(0));
-	enem.horizontalPosition = (float)tandH(gen);
-	enem.verticalPosition = (float)tandV(gen);
-	enem.horizontalVector = enem.random();
-	enem.verticalVector = enem.random();
+	enem.spaceship.horizontalPosition = (float)tandH(gen);
+	enem.spaceship.verticalPosition = (float)tandV(gen);
+	enem.spaceship.horizontalVector = enem.random();
+	enem.spaceship.verticalVector = enem.random();
 }
 
 void eminemCrash(Amo amo) {
@@ -119,11 +118,11 @@ void eminemCrash(Amo amo) {
 	//cout << "Amo hor position: " << amo.horizontalPosition << endl;
 
 	/*Calculate position Qwadrat*/
-	bool crash = CheckCollision(enem.horizontalPosition, enem.verticalPosition, enem.w, enem.h, amo.x, amo.y, 0.1, 0.01);
+	bool crash = CheckCollision(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, enem.spaceship.w, enem.spaceship.h, amo.x, amo.y, 0.1, 0.01);
 	if (crash) {
 		cout << "amo destroy" << endl;
 		amo.destroy();
-		enem.live = false;
+		enem.spaceship.live = false;
 		eminemNew();
 	}
 }
@@ -149,63 +148,87 @@ void Draw()
 	glLoadIdentity();
 
 	glPushMatrix();
-	glTranslatef(spaceship.horizontalPosition, spaceship.verticalPosition, 0.0);
-	glRotated(spaceship.angle, 0, 0, 1);
+	glTranslatef(player.spaceship.horizontalPosition, player.spaceship.verticalPosition, 0.0);
+	glRotated(player.spaceship.angle, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
-		glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
-		glVertex2f(-spaceship.w, -spaceship.h);
-		glVertex2f(spaceship.w, -spaceship.h);
-		glVertex2f(0, spaceship.h);
+		glColor3f(player.spaceship.verticalPosition, player.spaceship.horizontalPosition, 1.0);
+		glVertex2f(-player.spaceship.w, -player.spaceship.h);
+		glVertex2f(player.spaceship.w, -player.spaceship.h);
+		glVertex2f(0, player.spaceship.h);
 	glEnd();
 	glPopMatrix();
 
 	//Amo
-	for (int i = 0; i < spaceship.totalAmo; i++) {
-		if (spaceship.amos[i].live) {
+	for (int i = 0; i < player.spaceship.totalAmo; i++) {
+		if (player.spaceship.amos[i].live) {
 			//cout << "Amo "<< i <<" live: " << spaceship.amos[i].live << "; y: " << spaceship.amos[i].y << endl;
 			glPushMatrix();
-			glTranslatef(spaceship.amos[i].horizontalFirePosition, spaceship.amos[i].verticalFirePosition, 0.0);
-			glRotated(spaceship.amos[i].angle, 0, 0, 1);
-			glTranslated(spaceship.amos[i].horizontalPosition, spaceship.amos[i].verticalPosition += spaceship.amos[i]._speed, 0);
+			glTranslatef(player.spaceship.amos[i].horizontalFirePosition, player.spaceship.amos[i].verticalFirePosition, 0.0);
+			glRotated(player.spaceship.amos[i].angle, 0, 0, 1);
+			glTranslated(player.spaceship.amos[i].horizontalPosition, player.spaceship.amos[i].verticalPosition += player.spaceship.amos[i]._speed, 0);
 			glBegin(GL_LINES);
-			glColor3f(spaceship.horizontalPosition, spaceship.verticalPosition, 0.9);
+			glColor3f(player.spaceship.horizontalPosition, player.spaceship.verticalPosition, 0.9);
 			glVertex2f(0.0, 0.1);
 			glVertex2f(0, 0.0);
 			glEnd();
 			GLfloat matrixf[16];
 			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-			spaceship.amos[i].x = matrixf[12];
-			spaceship.amos[i].y = matrixf[13];
-			spaceship.amos[i].colaider();
-			eminemCrash(spaceship.amos[i]);
+			player.spaceship.amos[i].x = matrixf[12];
+			player.spaceship.amos[i].y = matrixf[13];
+			player.spaceship.amos[i].colaider();
+			eminemCrash(player.spaceship.amos[i]);
 			glPopMatrix();
 		}
 	}
 
 
 	//Enemies
-	if (enem.live) {
+	if (enem.spaceship.live) {
 		//eminemAngleSet();
 		enem.run();
 		glPushMatrix();
-		glTranslatef(enem.horizontalPosition, enem.verticalPosition, 0.0);
-		glRotated(enem.angle, 0, 0, 1);
+		glTranslatef(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, 0.0);
+		glRotated(enem.spaceship.angle, 0, 0, 1);
 		glBegin(GL_QUADS);
-		glColor3f(spaceship.verticalPosition, spaceship.horizontalPosition, 1.0);
-		glVertex2f(0.0, enem.h);
-		glVertex2f(enem.w, enem.h);
-		glVertex2f(enem.w, 0.0);
+		glColor3f(player.spaceship.verticalPosition, player.spaceship.horizontalPosition, 1.0);
+		glVertex2f(0.0, enem.spaceship.h);
+		glVertex2f(enem.spaceship.w, enem.spaceship.h);
+		glVertex2f(enem.spaceship.w, 0.0);
 		glVertex2f(0.0, 0.0);
 		glEnd();
 		glPopMatrix();
 	}
 
+	//Amo
+	for (int i = 0; i < enem.spaceship.totalAmo; i++) {
+		if (enem.spaceship.amos[i].live) {
+			//cout << "Amo "<< i <<" live: " << spaceship.amos[i].live << "; y: " << spaceship.amos[i].y << endl;
+			glPushMatrix();
+			glTranslatef(enem.spaceship.amos[i].horizontalFirePosition, enem.spaceship.amos[i].verticalFirePosition, 0.0);
+			glRotated(enem.spaceship.amos[i].angle, 0, 0, 1);
+			glTranslated(enem.spaceship.amos[i].horizontalPosition, enem.spaceship.amos[i].verticalPosition += enem.spaceship.amos[i]._speed, 0);
+			glBegin(GL_LINES);
+			glColor3f(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, 0.9);
+			glVertex2f(0.0, 0.1);
+			glVertex2f(0, 0.0);
+			glEnd();
+			GLfloat matrixf[16];
+			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+			enem.spaceship.amos[i].x = matrixf[12];
+			enem.spaceship.amos[i].y = matrixf[13];
+			//enem.spaceship.amos[i].colaider();
+			//eminemCrash(enem.spaceship.amos[i]);
+			glPopMatrix();
+		}
+	}
+
+
 	//Space
 	for (int i = 0; i < ((_DrawStar * 2) - 2) / 2; i = i + 2) {
 		glPushMatrix();
-		glTranslatef(-spaceship.horizontalPosition / 20, -spaceship.verticalPosition / 20, 0.0);
+		glTranslatef(-player.spaceship.horizontalPosition / 20, -player.spaceship.verticalPosition / 20, 0.0);
 		glBegin(GL_POINTS);
-		glColor3f(spaceship.verticalPosition + StarBrightness, spaceship.horizontalPosition + StarBrightness, 1.0);
+		glColor3f(player.spaceship.verticalPosition + StarBrightness, player.spaceship.horizontalPosition + StarBrightness, 1.0);
 		glVertex2f(StarCoord[i], StarCoord[i+1]);
 		glEnd();
 		glPopMatrix();
@@ -213,15 +236,13 @@ void Draw()
 
 	for (int i = _DrawStar / 2; i < (_DrawStar * 2) - 2; i = i + 2) {
 		glPushMatrix();
-		glTranslatef(-spaceship.horizontalPosition / 10, -spaceship.verticalPosition / 10, 0.0);
+		glTranslatef(-player.spaceship.horizontalPosition / 10, -player.spaceship.verticalPosition / 10, 0.0);
 		glBegin(GL_POINTS);
-		glColor3f(spaceship.verticalPosition + 1.5, spaceship.horizontalPosition + 1.5, 1.0);
+		glColor3f(player.spaceship.verticalPosition + 1.5, player.spaceship.horizontalPosition + 1.5, 1.0);
 		glVertex2f(StarCoord[i], StarCoord[i + 1]);
 		glEnd();
 		glPopMatrix();
 	}
-	
-
 
 	glutSwapBuffers();
 }
@@ -231,7 +252,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 	if (key == _GLFW_KEY_SPACE) {
 		cout << "Space press";
-		spaceship.fire();
+		player.spaceship.fire();
+		//enem.spaceship.fire();
 		fireEfect->play2D("audio/lasser.wav", false);
 	}
 
@@ -240,20 +262,20 @@ void processNormalKeys(unsigned char key, int x, int y) {
 void processSpecialKeys(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_LEFT:
-		if (spaceship.horizontalPosition - spaceship.speed < 1.0 && spaceship.horizontalPosition - spaceship.speed > -1.0)
-			spaceship.horizontalPosition -= spaceship.speed;
+		if (player.spaceship.horizontalPosition - player.spaceship.speed < 1.0 && player.spaceship.horizontalPosition - player.spaceship.speed > -1.0)
+			player.spaceship.horizontalPosition -= player.spaceship.speed;
 		break;
 	case GLUT_KEY_RIGHT:
-		if (spaceship.horizontalPosition + spaceship.speed < 1.0 && spaceship.horizontalPosition + spaceship.speed > -1.0)
-			spaceship.horizontalPosition += spaceship.speed;
+		if (player.spaceship.horizontalPosition + player.spaceship.speed < 1.0 && player.spaceship.horizontalPosition + player.spaceship.speed > -1.0)
+			player.spaceship.horizontalPosition += player.spaceship.speed;
 		break;
 	case GLUT_KEY_UP:
-		if (spaceship.verticalPosition + spaceship.speed < 1.0 && spaceship.verticalPosition + spaceship.speed > -1.0)
-			spaceship.verticalPosition += spaceship.speed;
+		if (player.spaceship.verticalPosition + player.spaceship.speed < 1.0 && player.spaceship.verticalPosition + player.spaceship.speed > -1.0)
+			player.spaceship.verticalPosition += player.spaceship.speed;
 		break;
 	case GLUT_KEY_DOWN:
-		if (spaceship.verticalPosition - spaceship.speed < 1.0 && spaceship.verticalPosition - spaceship.speed > -1.0)
-			spaceship.verticalPosition -= spaceship.speed;
+		if (player.spaceship.verticalPosition - player.spaceship.speed < 1.0 && player.spaceship.verticalPosition - player.spaceship.speed > -1.0)
+			player.spaceship.verticalPosition -= player.spaceship.speed;
 		break;
 	}
 }
@@ -265,27 +287,27 @@ void Mouse(int ax, int ay)
 	//cout << fixed;
 	//cout << " x:" << XPosition << " y:" << -YPosition << endl;
 
-	spaceship.horizontalPosition = XPosition;
-	spaceship.verticalPosition = -YPosition;
+	player.spaceship.horizontalPosition = XPosition;
+	player.spaceship.verticalPosition = -YPosition;
 }
 
 void MouseFunc(int button, int state, int x, int y)
 {
 	if (button == 3) {
-		spaceship.angle += 5;
+		player.spaceship.angle += 5;
 	}
 
 	if (button == 4) {
-		spaceship.angle -= 5;
+		player.spaceship.angle -= 5;
 	}
 
 	if (button == GLUT_MIDDLE_BUTTON) {
-		spaceship.angle = 0;
+		player.spaceship.angle = 0;
 	}
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		cout << "Mouse Left press";
-		spaceship.fire();
+		player.spaceship.fire();
 		fireEfect->play2D("audio/lasser.wav", false);
 	}
 

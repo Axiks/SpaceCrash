@@ -1,18 +1,18 @@
 #pragma once
 #include <cstdlib>
+#include <string>
+#include "Spaceship.h"
 
 class Enemies
 {
 public:
-	float horizontalPosition, verticalPosition;
-	bool horizontalVector;
-	bool verticalVector;
-	float w, h;
-	float speed = 0.01;
-	float angle = 0;
-	bool live;
-	Enemies(float hor, float ver) : horizontalPosition(hor), verticalPosition(ver), w(0.1), h(0.1), live(true){};
-	Enemies() : horizontalPosition(0), verticalPosition(0), w(0.1), h(0.1), live(true) {};
+	string name;
+	int lives;
+	Spaceship spaceship;
+
+	Enemies(float hor, float ver);
+	//Enemies(float hor, float ver) : spaceship.horizontalPosition(hor), spaceship.verticalPosition(ver), spaceship.w(0.1), spaceship.h(0.1), spaceship.live(true), spaceship.speed(0.01), spaceship.angle(0){};
+	//Enemies() : spaceship.horizontalPosition{(0), spaceship.verticalPosition(0), spaceship.w(0.1), spaceship.h(0.1), spaceship.live(true), spaceship.speed(0.01), spaceship.angle() {};
 	void run();
 	bool random();
 };

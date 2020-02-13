@@ -131,13 +131,17 @@
   <ItemGroup>
     <ClCompile Include="Amo.cpp" />
     <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="GameObj.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Spaceship.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Amo.h" />
     <ClInclude Include="Enemies.h" />
+    <ClInclude Include="GameObj.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Spaceship.h" />
     <ClInclude Include="Vars.h" />
   </ItemGroup>
