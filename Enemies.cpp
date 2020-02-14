@@ -2,11 +2,9 @@
 
 Enemies::Enemies(float hor, float ver)
 {
-	spaceship.horizontalPosition = hor;
-	spaceship.verticalPosition = ver;
+	createSpaceship();
 	spaceship.w = 0.1;
 	spaceship.h = 0.1;
-	spaceship.live = true;
 	spaceship.speed = 0.01;
 }
 
@@ -27,12 +25,21 @@ void Enemies::run()
 	if (spaceship.verticalPosition <= 0) spaceship.verticalVector = true;
 }
 
-
-
 bool Enemies::random() {
 	if (rand() % 2 == 0)
 		return true;
 	else return false;
 }
 
-
+void Enemies::createSpaceship()
+{
+	mt19937 gen;
+	uniform_real_distribution<> randX(-0.9, 0.9);
+	uniform_real_distribution<> randY(0, 0.9);
+	spaceship.live = true;
+	gen.seed(time(0));
+	spaceship.horizontalPosition = (float)randX(gen);
+	spaceship.verticalPosition = (float)randY(gen);
+	spaceship.horizontalVector = random();
+	spaceship.verticalVector = random();
+}

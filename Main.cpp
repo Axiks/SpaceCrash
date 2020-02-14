@@ -11,7 +11,6 @@
 #include <irrKlang.h>
 #include <cstdlib>
 #include <ctime>  
-#include <random>
 #include <windows.h>
 #include <array>
 
@@ -23,9 +22,6 @@ ISoundEngine* fireEfect = createIrrKlangDevice();
 Player player;
 
 mt19937 gen;
-uniform_real_distribution<> tandH(-0.9, 0.9);
-uniform_real_distribution<> tandV(0, 0.9);
-
 uniform_real_distribution<> starH(-1.25, 1.25);
 uniform_real_distribution<> starV(-1.25, 1.25);
 
@@ -73,6 +69,53 @@ GLboolean CheckCollision(float oneX, float oneY, float oneSizeX, float oneSizeY,
 	return collisionX && collisionY;
 }
 
+GLboolean Collision(GLfloat matrixA[16], GLfloat matrixB[16]) {
+	float oneSizeX = 0.1;
+	float twoSizeX = 0.1;
+	float oneSizeY = 0.1;
+	float twoSizeY = 0.1;
+
+	GLfloat Ax = matrixA[12];
+	GLfloat Ay = matrixA[13];
+	GLfloat Bx = matrixB[12];
+	GLfloat By = matrixB[13];
+	// Collision x-axis?
+	bool collisionX = Bx <= Ax + oneSizeX &&
+		Bx >= Ax;
+	// Collision y-axis?
+	bool collisionY = By <= Ay + oneSizeY &&
+		By >= Ay;
+	if (_Debug) {
+		//Debug
+		float a = oneSizeX;
+		float b = oneSizeY;
+		float c = oneSizeX;
+		float d = oneSizeY;
+
+		cout << endl;
+		cout << "        a         " << endl;
+		cout << "   A---------B    " << endl;
+		cout << "   |---------|    " << endl;
+		cout << "d  |---------|  b " << endl;
+		cout << "   |---------|    " << endl;
+		cout << "   D---------C    " << endl;
+		cout << "        c         " << endl;
+		cout << "A)" << "x: " << Ax << " y: " << Ay + d << endl;
+		cout << "B)" << "x: " << Ax + a << " y: " << Ay + d << endl;
+		cout << "C)" << "x: " << Ax + a << " y: " << Ay << endl;
+		cout << "(D) " << "x: " << Ax << " y: " << Ay << endl;
+		cout << "a) " << a << endl;
+		cout << "b) " << b << endl;
+		cout << "c) " << c << endl;
+		cout << "d) " << d << endl;
+	}
+
+	cout << "REsult: " << (collisionX && collisionY) << endl;
+
+	// Collision only if on both axes
+	return collisionX && collisionY;
+}
+
 void drawMatrix(GLfloat matrix[16]) {
 	for (int i = 0; i < 16; i++) {
 		cout << "[" << i << "] " << matrix[i] << " ";
@@ -103,15 +146,21 @@ void eminemAngleSet() {
 	enem.spaceship.angle = angle * 360;
 	cout << "Angle: " << enem.spaceship.angle << endl;
 }
-
-void eminemNew() {
-	enem.spaceship.live = true;
-	gen.seed(time(0));
-	enem.spaceship.horizontalPosition = (float)tandH(gen);
-	enem.spaceship.verticalPosition = (float)tandV(gen);
-	enem.spaceship.horizontalVector = enem.random();
-	enem.spaceship.verticalVector = enem.random();
-}
+//
+//void eminemCrash(GLfloat spaceship[16], GLfloat amo[16]) {
+//	//cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
+//	//cout << "Amo hor position: " << amo.horizontalPosition << endl;
+//
+//	/*Calculate position Qwadrat*/
+//	//bool crash = CheckCollision(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, enem.spaceship.w, enem.spaceship.h, amo.x, amo.y, 0.1, 0.01);
+//	bool crash = Collision(spaceship, amo);
+//	if (false) {
+//		cout << "amo destroy" << endl;
+//		//amo.destroy();
+//		enem.spaceship.live = false;
+//		enem.createSpaceship();
+//	}
+//}
 
 void eminemCrash(Amo amo) {
 	//cout << "Enem horyzontal position: " << enem.horizontalPosition << endl;
@@ -121,9 +170,9 @@ void eminemCrash(Amo amo) {
 	bool crash = CheckCollision(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, enem.spaceship.w, enem.spaceship.h, amo.x, amo.y, 0.1, 0.01);
 	if (crash) {
 		cout << "amo destroy" << endl;
-		amo.destroy();
+		//amo.destroy();
 		enem.spaceship.live = false;
-		eminemNew();
+		enem.createSpaceship();
 	}
 }
 
@@ -155,6 +204,10 @@ void Draw()
 		glVertex2f(-player.spaceship.w, -player.spaceship.h);
 		glVertex2f(player.spaceship.w, -player.spaceship.h);
 		glVertex2f(0, player.spaceship.h);
+		GLfloat matrixf[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+		//player.spaceship.matrix = matrixf;
+		//Collision(player.spaceship.matrix, enem.spaceship.matrix);
 	glEnd();
 	glPopMatrix();
 
@@ -173,6 +226,7 @@ void Draw()
 			glEnd();
 			GLfloat matrixf[16];
 			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+			player.spaceship.amos[i].matrix = matrixf;
 			player.spaceship.amos[i].x = matrixf[12];
 			player.spaceship.amos[i].y = matrixf[13];
 			player.spaceship.amos[i].colaider();
@@ -185,7 +239,7 @@ void Draw()
 	//Enemies
 	if (enem.spaceship.live) {
 		//eminemAngleSet();
-		enem.run();
+		//enem.run();
 		glPushMatrix();
 		glTranslatef(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, 0.0);
 		glRotated(enem.spaceship.angle, 0, 0, 1);
@@ -195,32 +249,37 @@ void Draw()
 		glVertex2f(enem.spaceship.w, enem.spaceship.h);
 		glVertex2f(enem.spaceship.w, 0.0);
 		glVertex2f(0.0, 0.0);
+		GLfloat matrixf[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+		//enem.spaceship.matrix = matrixf;
+		//drawMatrix(matrixf);
 		glEnd();
 		glPopMatrix();
 	}
 
-	//Amo
-	for (int i = 0; i < enem.spaceship.totalAmo; i++) {
-		if (enem.spaceship.amos[i].live) {
-			//cout << "Amo "<< i <<" live: " << spaceship.amos[i].live << "; y: " << spaceship.amos[i].y << endl;
-			glPushMatrix();
-			glTranslatef(enem.spaceship.amos[i].horizontalFirePosition, enem.spaceship.amos[i].verticalFirePosition, 0.0);
-			glRotated(enem.spaceship.amos[i].angle, 0, 0, 1);
-			glTranslated(enem.spaceship.amos[i].horizontalPosition, enem.spaceship.amos[i].verticalPosition += enem.spaceship.amos[i]._speed, 0);
-			glBegin(GL_LINES);
-			glColor3f(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, 0.9);
-			glVertex2f(0.0, 0.1);
-			glVertex2f(0, 0.0);
-			glEnd();
-			GLfloat matrixf[16];
-			glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-			enem.spaceship.amos[i].x = matrixf[12];
-			enem.spaceship.amos[i].y = matrixf[13];
-			//enem.spaceship.amos[i].colaider();
-			//eminemCrash(enem.spaceship.amos[i]);
-			glPopMatrix();
-		}
-	}
+	////Amo
+	//for (int i = 0; i < enem.spaceship.totalAmo; i++) {
+	//	if (enem.spaceship.amos[i].live) {
+	//		//cout << "Amo "<< i <<" live: " << spaceship.amos[i].live << "; y: " << spaceship.amos[i].y << endl;
+	//		glPushMatrix();
+	//		glTranslatef(enem.spaceship.amos[i].horizontalFirePosition, enem.spaceship.amos[i].verticalFirePosition, 0.0);
+	//		glRotated(enem.spaceship.amos[i].angle, 0, 0, 1);
+	//		glTranslated(enem.spaceship.amos[i].horizontalPosition, enem.spaceship.amos[i].verticalPosition += enem.spaceship.amos[i]._speed, 0);
+	//		glBegin(GL_LINES);
+	//		glColor3f(enem.spaceship.horizontalPosition, enem.spaceship.verticalPosition, 0.9);
+	//		glVertex2f(0.0, 0.1);
+	//		glVertex2f(0, 0.0);
+	//		glEnd();
+	//		GLfloat matrixf[16];
+	//		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+	//		enem.spaceship.amos[i].x = matrixf[12];
+	//		enem.spaceship.amos[i].y = matrixf[13];
+	//		//enem.spaceship.amos[i].colaider();
+	//		//eminemCrash(enem.spaceship.amos[i]);
+	//		enem.spaceship.matrix = matrixf;
+	//		glPopMatrix();
+	//	}
+	//}
 
 
 	//Space
@@ -254,7 +313,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 		cout << "Space press";
 		player.spaceship.fire();
 		//enem.spaceship.fire();
-		fireEfect->play2D("audio/lasser.wav", false);
+		if (_Sound) fireEfect->play2D("audio/lasser.wav", false);
 	}
 
 }
@@ -308,7 +367,7 @@ void MouseFunc(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		cout << "Mouse Left press";
 		player.spaceship.fire();
-		fireEfect->play2D("audio/lasser.wav", false);
+		if (_Sound) fireEfect->play2D("audio/lasser.wav", false);
 	}
 
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
@@ -340,8 +399,8 @@ void Init()
 	glLoadIdentity();
 	glOrtho(0.0, 1.0, 0.0, 0.0f, 0.0f, 1.0f);
 	createStar();
-	eminemNew();
-	BackgroundMusic->play2D("audio/bg.mp3", true);
+	//enem.createSpaceship();
+	if (_Sound) BackgroundMusic->play2D("audio/bg.mp3", true);
 }
 
 int main(int argc, char** argv)
@@ -355,7 +414,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(_DisplayWidth, _DisplayHeight);
-	glutInitWindowPosition(100, 50);
+	glutInitWindowPosition(100, 0);
 	glutCreateWindow("SpaceY");
 	glutDisplayFunc(Draw);
 	glutTimerFunc(_DisplayFPS, Timer, 0);
