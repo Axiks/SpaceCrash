@@ -7,6 +7,7 @@
 #include "Vars.h"
 #include "Player.h"
 #include "Enemies.h"
+#include "Debug.h"
 #pragma comment(lib, "irrKlang.lib")
 #include <irrKlang.h>
 #include <cstdlib>
@@ -26,6 +27,8 @@ uniform_real_distribution<> starH(-1.25, 1.25);
 uniform_real_distribution<> starV(-1.25, 1.25);
 
 Enemies enem(0.0, 0.0);
+
+//Debug dbg = Debug();
 
 float StarCoord[_DrawStar * 2];
 float StarBrightness = 0;
@@ -69,61 +72,6 @@ GLboolean CheckCollision(float oneX, float oneY, float oneSizeX, float oneSizeY,
 	return collisionX && collisionY;
 }
 
-GLboolean Collision(GLfloat matrixA[16], GLfloat matrixB[16]) {
-	float oneSizeX = 0.1;
-	float twoSizeX = 0.1;
-	float oneSizeY = 0.1;
-	float twoSizeY = 0.1;
-
-	GLfloat Ax = matrixA[12];
-	GLfloat Ay = matrixA[13];
-	GLfloat Bx = matrixB[12];
-	GLfloat By = matrixB[13];
-	// Collision x-axis?
-	bool collisionX = Bx <= Ax + oneSizeX &&
-		Bx >= Ax;
-	// Collision y-axis?
-	bool collisionY = By <= Ay + oneSizeY &&
-		By >= Ay;
-	if (_Debug) {
-		//Debug
-		float a = oneSizeX;
-		float b = oneSizeY;
-		float c = oneSizeX;
-		float d = oneSizeY;
-
-		cout << endl;
-		cout << "        a         " << endl;
-		cout << "   A---------B    " << endl;
-		cout << "   |---------|    " << endl;
-		cout << "d  |---------|  b " << endl;
-		cout << "   |---------|    " << endl;
-		cout << "   D---------C    " << endl;
-		cout << "        c         " << endl;
-		cout << "A)" << "x: " << Ax << " y: " << Ay + d << endl;
-		cout << "B)" << "x: " << Ax + a << " y: " << Ay + d << endl;
-		cout << "C)" << "x: " << Ax + a << " y: " << Ay << endl;
-		cout << "(D) " << "x: " << Ax << " y: " << Ay << endl;
-		cout << "a) " << a << endl;
-		cout << "b) " << b << endl;
-		cout << "c) " << c << endl;
-		cout << "d) " << d << endl;
-	}
-
-	cout << "REsult: " << (collisionX && collisionY) << endl;
-
-	// Collision only if on both axes
-	return collisionX && collisionY;
-}
-
-void drawMatrix(GLfloat matrix[16]) {
-	for (int i = 0; i < 16; i++) {
-		cout << "[" << i << "] " << matrix[i] << " ";
-		if (i == 3 || i == 7 || i == 11 || i == 15) cout << endl;
-		if (i == 15) cout << endl;
-	}
-}
-
 void createStar() {
 	int c = 0;
 	gen.seed(time(0));
@@ -132,7 +80,7 @@ void createStar() {
 		float y = (float)starV(gen);
 		StarCoord[i] = x;
 		StarCoord[i + 1] = y;
-		cout << "Star "<< c <<" cord: x)" << x << " y)" << y << endl;
+		//cout << "Star "<< c <<" cord: x)" << x << " y)" << y << endl;
 	}
 }
 
@@ -176,10 +124,6 @@ void eminemCrash(Amo amo) {
 	}
 }
 
-void Physics() {
-
-}
-
 void Draw()
 {
 	if (Brightness && StarBrightness < 1.5) {
@@ -195,7 +139,8 @@ void Draw()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
+	
+	//Player
 	glPushMatrix();
 	glTranslatef(player.spaceship.horizontalPosition, player.spaceship.verticalPosition, 0.0);
 	glRotated(player.spaceship.angle, 0, 0, 1);
@@ -204,14 +149,14 @@ void Draw()
 		glVertex2f(-player.spaceship.w, -player.spaceship.h);
 		glVertex2f(player.spaceship.w, -player.spaceship.h);
 		glVertex2f(0, player.spaceship.h);
-		GLfloat matrixf[16];
-		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-		//player.spaceship.matrix = matrixf;
-		//Collision(player.spaceship.matrix, enem.spaceship.matrix);
 	glEnd();
+	GLfloat matrixf[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
+	player.spaceship.gameObj.matrix = matrixf;
+	//Collision(player.spaceship.matrix, enem.spaceship.matrix);
 	glPopMatrix();
 
-	//Amo
+	//Player Amo
 	for (int i = 0; i < player.spaceship.totalAmo; i++) {
 		if (player.spaceship.amos[i].live) {
 			//cout << "Amo "<< i <<" live: " << spaceship.amos[i].live << "; y: " << spaceship.amos[i].y << endl;
@@ -249,11 +194,9 @@ void Draw()
 		glVertex2f(enem.spaceship.w, enem.spaceship.h);
 		glVertex2f(enem.spaceship.w, 0.0);
 		glVertex2f(0.0, 0.0);
-		GLfloat matrixf[16];
-		glGetFloatv(GL_MODELVIEW_MATRIX, matrixf);
-		//enem.spaceship.matrix = matrixf;
-		//drawMatrix(matrixf);
 		glEnd();
+		glGetFloatv(GL_MODELVIEW_MATRIX, enem.spaceship.gameObj.matrix);
+		//dbg.collisionCheck(player.spaceship.gameObj, enem.spaceship.gameObj);
 		glPopMatrix();
 	}
 

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <GL\glew.h>
 
-
 using namespace std;
 class Amo
 {

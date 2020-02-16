@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Amo.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="GameObj.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -138,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Amo.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="GameObj.h" />
     <ClInclude Include="Main.h" />
